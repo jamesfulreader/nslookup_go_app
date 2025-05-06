@@ -25,10 +25,15 @@ func main() {
 	}
 	defer outputUrls.Close()
 
+	// Create counter for
+	c1 := 0
+	c2 := 0
+
 	// Create a buffered writer for the output file
 	writer := bufio.NewWriter(outputUrls)
 	// Read the input file line by line
 	scanner := bufio.NewScanner(inputUrls)
+
 	for scanner.Scan() {
 		url := strings.TrimSpace(scanner.Text())
 		if url == "" {
@@ -41,7 +46,13 @@ func main() {
 			continue
 		}
 
-		writer.WriteString(fmt.Sprintf("%s: %v\n", url, isp))
+		// add isp to count and display in output
+		if isp == "string of isp to look at" {
+			c1++
+			writer.WriteString(fmt.Sprintf("%s: %v\n", url, isp))
+		} else {
+			c2++
+		}
 
 		if err := scanner.Err(); err != nil {
 			fmt.Println("Error reading file:", err)
@@ -49,5 +60,8 @@ func main() {
 		}
 		writer.Flush()
 	}
+	writer.WriteString(fmt.Sprintf("c1 count: %v\nc2 count: %v\n", c1, c2))
+	writer.Flush()
+
 	fmt.Println("NS lookup completed. Results saved to output.txt.")
 }
